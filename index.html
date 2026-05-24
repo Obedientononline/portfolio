@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shivani R | Where Data, Machines &amp; Human Learning Intersect</title>
+  <meta name="description" content="Portfolio of Shivani R - Statistician, AI and Robotics researcher. An immersive cinematic journey through mathematics, data science, and human learning.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+/* === CINEMATIC PORTFOLIO - Core Styles === */
+:root {
+  --cream: #FAF6F0; --cream-dark: #F0E9DE; --cream-mid: #F5EFE5;
+  --teal: #5B8A8A; --teal-light: #7AABAB; --teal-dark: #4A7272;
+  --indigo: #4A4E7A; --indigo-muted: #6B6F9A;
+  --orange: #C8713D; --orange-light: #D4895A;
+  --graphite: #2D2D2D; --graphite-light: #4A4A4A; --graphite-mid: #6B6B6B;
+  --gold: #C9A96E; --gold-light: #D4BC8A; --gold-shimmer: #E8D5A8;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
+  --font-hand: 'Caveat', cursive;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; overflow: hidden; }
+body {
+  font-family: var(--font-sans); color: var(--graphite); background: #0a0a0f;
+  line-height: 1.7; overflow: hidden; cursor: none; width: 100vw; height: 100vh;
+}
+::selection { background: var(--gold-light); color: var(--graphite); }
+h1,h2,h3,h4 { font-family: var(--font-serif); font-weight: 600; line-height: 1.2; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+
+/* --- Loader --- */
+#cinematic-loader {
+  position: fixed; inset: 0; z-index: 10000; background: #0a0a0f;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: opacity 1.2s ease, visibility 1.2s;
+}
+#cinematic-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+#loader-canvas { width: 300px; height: 150px; }
+.loader-equation {
+  font-family: var(--font-hand); font-size: 1.4rem; color: var(--gold);
+  opacity: 0; margin-top: 20px; letter-spacing: 0.05em;
+}
+.loader-status {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--teal);
+  opacity: 0; margin-top: 12px; letter-spacing: 0.08em;
+}
+
+/* --- Three.js Canvas --- */
+#three-canvas {
+  position: fixed; inset: 0; z-index: 1; width: 100vw; height: 100vh;
+}
+
+/* --- Chapter Overlay System --- */
+#chapter-container {
+  position: fixed; inset: 0; z-index: 10; pointer-events: none;
+  perspective: 1200px;
+}
+.chapter-page {
+  position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.6s ease;
+}
+.chapter-page.active { opacity: 1; pointer-events: auto; }
+.chapter-inner {
+  max-width: 900px; width: 90%; max-height: 85vh; overflow-y: auto;
+  padding: 3rem; position: relative;
+  scrollbar-width: thin; scrollbar-color: var(--graphite-mid) transparent;
+}
+.chapter-inner::-webkit-scrollbar { width: 4px; }
+.chapter-inner::-webkit-scrollbar-thumb { background: var(--graphite-mid); border-radius: 2px; }
+
+/* --- Navigation HUD --- */
+#nav-hud {
+  position: fixed; right: 30px; top: 50%; transform: translateY(-50%);
+  z-index: 100; display: flex; flex-direction: column; gap: 20px;
+}
+.nav-dot {
+  width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid rgba(250,246,240,0.3);
+  background: transparent; cursor: pointer; transition: all 0.4s var(--ease-out-expo);
+  position: relative;
+}
+.nav-dot:hover, .nav-dot.active {
+  border-color: var(--gold); background: var(--gold); transform: scale(1.4);
+  box-shadow: 0 0 15px rgba(201,169,110,0.4);
+}
+.nav-dot::after {
+  content: attr(data-label); position: absolute; right: 24px; top: 50%;
+  transform: translateY(-50%); font-family: var(--font-mono); font-size: 0.7rem;
+  color: rgba(250,246,240,0.5); white-space: nowrap; opacity: 0;
+  transition: opacity 0.3s; pointer-events: none;
+}
+.nav-dot:hover::after { opacity: 1; }
+
+/* --- Logo --- */
+#nav-logo {
+  position: fixed; top: 24px; left: 30px; z-index: 100;
+  font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600;
+  color: rgba(250,246,240,0.8); letter-spacing: 0.02em;
+  mix-blend-mode: difference;
+}
+
+/* --- Chapter Themes (ALL DARK BY DEFAULT) --- */
+
+/* Shared dark panel base */
+.chapter-inner {
+  background: rgba(12,14,22,0.88); border-radius: 8px;
+  border: 1px solid rgba(91,138,138,0.12); color: var(--cream);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+}
+
+/* Chapter 1: Getting to Know Me */
+.ch-about .chapter-inner {
+  border-left: 4px solid var(--orange); border-radius: 4px;
+  background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(91,138,138,0.04) 31px, rgba(91,138,138,0.04) 32px);
+}
+.ch-about .section-label {
+  font-family: var(--font-hand); font-size: 1.3rem; color: var(--orange);
+  display: block; margin-bottom: 0.5rem;
+}
+.ch-about h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 2rem; color: var(--cream); }
+.ch-about .story-block { position: relative; margin-bottom: 1.5rem; }
+.ch-about .story-annotation {
+  font-family: var(--font-hand); font-size: 1rem; color: var(--orange);
+  opacity: 0.8; transform: rotate(-1deg); margin-bottom: 0.3rem; display: block;
+}
+.ch-about .notebook-page {
+  padding: 1.2rem 1.5rem; border-left: 3px solid rgba(200,113,61,0.3);
+  background: rgba(250,246,240,0.04); border-radius: 3px;
+  transition: all 0.4s var(--ease-out-expo);
+}
+.ch-about .notebook-page:hover {
+  border-left-color: var(--orange); transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(200,113,61,0.1); background: rgba(250,246,240,0.06);
+}
+.ch-about .highlight { position: relative; display: inline; }
+.ch-about .highlight::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 30%;
+  background: var(--gold); opacity: 0.15; z-index: -1;
+}
+.ch-about p { line-height: 1.9; margin-bottom: 0.5rem; color: rgba(250,246,240,0.8); }
+.ch-about .closing { font-family: var(--font-hand); font-size: 1.4rem; color: var(--teal-light); margin-top: 1rem; }
+
+/* Stats Dashboard */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+.stat-card {
+  background: rgba(250,246,240,0.04); border: 1px solid rgba(250,246,240,0.08); border-radius: 8px;
+  padding: 1.2rem; text-align: center; transition: all 0.5s var(--ease-out-expo);
+}
+.stat-card:hover { transform: translateY(-6px) rotateX(5deg); box-shadow: 0 15px 40px rgba(91,138,138,0.15); border-color: rgba(91,138,138,0.3); }
+.stat-number {
+  font-family: var(--font-mono); font-size: 2rem; font-weight: 600;
+  color: var(--teal-light); display: block; line-height: 1; margin-bottom: 0.4rem;
+}
+.stat-label { font-size: 0.78rem; color: rgba(250,246,240,0.4); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+
+/* Chapter 2: Explore Work */
+.ch-work .chapter-inner { border-color: rgba(91,138,138,0.15); }
+.ch-work .section-label { font-family: var(--font-hand); font-size: 1.3rem; color: var(--gold); }
+.ch-work h2 { color: var(--cream); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 2rem; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+.proj-card {
+  background: rgba(250,246,240,0.04); border: 1px solid rgba(250,246,240,0.08);
+  border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.5s var(--ease-out-expo);
+}
+.proj-card:hover { transform: translateY(-6px); border-color: rgba(91,138,138,0.3); box-shadow: 0 15px 40px rgba(91,138,138,0.15); }
+.proj-bar { height: 3px; width: 100%; }
+.proj-body { padding: 1rem 1.2rem; }
+.proj-title { font-family: var(--font-serif); font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; text-transform: capitalize; }
+.proj-desc { font-size: 0.82rem; color: rgba(250,246,240,0.5); line-height: 1.6; margin-bottom: 0.8rem; }
+.proj-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.8rem; }
+.proj-tag { padding: 2px 8px; background: rgba(91,138,138,0.15); color: var(--teal-light); border-radius: 10px; font-size: 0.68rem; }
+.proj-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: rgba(250,246,240,0.4); }
+.proj-link { font-family: var(--font-hand); color: var(--teal); font-size: 0.95rem; transition: color 0.3s; }
+.proj-link:hover { color: var(--gold); }
+
+/* Chapter 3: Skills */
+.ch-skills .chapter-inner { border-color: rgba(201,169,110,0.12); }
+.ch-skills .section-label { font-family: var(--font-hand); font-size: 1.3rem; color: var(--gold); }
+.ch-skills h2 { color: var(--cream); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; }
+#skills-canvas { width: 100%; height: 400px; display: block; }
+
+/* Chapter 4: Building with Curiosity */
+.ch-build .chapter-inner {
+  border-color: rgba(200,113,61,0.15); border-left: 4px solid var(--orange);
+  background-image: linear-gradient(rgba(250,246,240,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(250,246,240,0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.ch-build .section-label { font-family: var(--font-hand); font-size: 1.3rem; color: var(--orange); }
+.ch-build h2 { color: var(--cream); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; }
+.exp-timeline { display: flex; flex-direction: column; gap: 2rem; }
+.exp-block { display: flex; gap: 1.5rem; }
+.exp-marker { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px; }
+.exp-num { font-family: var(--font-hand); font-size: 2rem; color: var(--orange); line-height: 1; }
+.exp-line { flex: 1; width: 2px; background: linear-gradient(to bottom, var(--orange-light), transparent); }
+.exp-content { flex: 1; }
+.exp-theme { font-family: var(--font-hand); font-size: 1rem; color: var(--teal-light); margin-bottom: 0.3rem; }
+.exp-content h3 { font-size: 1.3rem; margin-bottom: 0.2rem; color: var(--cream); }
+.exp-role { color: rgba(250,246,240,0.5); font-weight: 500; margin-bottom: 0.8rem; font-size: 0.9rem; }
+.exp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.exp-tag { padding: 5px 12px; background: rgba(91,138,138,0.12); color: var(--teal-light); border-radius: 16px; font-size: 0.78rem; font-weight: 500; }
+.bp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
+.bp-card {
+  padding: 1rem 0.8rem; background: rgba(250,246,240,0.04); border: 1px solid rgba(250,246,240,0.08);
+  border-radius: 4px; transition: all 0.4s var(--ease-out-expo); cursor: default;
+}
+.bp-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(91,138,138,0.1); border-color: rgba(91,138,138,0.2); }
+.bp-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 2px; color: var(--cream); }
+.bp-note { font-family: var(--font-hand); font-size: 0.9rem; color: rgba(250,246,240,0.4); }
+
+/* Chapter 5: Playground */
+.ch-play .chapter-inner { border-color: rgba(91,138,138,0.12); box-shadow: 0 20px 60px rgba(0,0,0,0.5); backdrop-filter: blur(16px); }
+.ch-play .section-label { font-family: var(--font-hand); font-size: 1.3rem; color: var(--gold); }
+.ch-play h2 { color: var(--cream); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; }
+.curiosity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.cur-card {
+  background: rgba(250,246,240,0.04); border: 1px solid rgba(250,246,240,0.08);
+  padding: 1.2rem; border-radius: 4px; transition: all 0.5s var(--ease-out-expo);
+}
+.cur-card:hover { transform: translateY(-4px); border-color: rgba(201,169,110,0.3); box-shadow: 0 10px 30px rgba(201,169,110,0.1); }
+.cur-card h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+.cur-card p { font-family: var(--font-hand); font-size: 1rem; color: rgba(250,246,240,0.5); }
+
+/* --- Footer Bar --- */
+#footer-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  padding: 12px 30px; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 0.7rem; color: rgba(250,246,240,0.3);
+  pointer-events: none;
+}
+#footer-bar a { pointer-events: auto; color: rgba(250,246,240,0.4); transition: color 0.3s; }
+#footer-bar a:hover { color: var(--gold); }
+
+/* --- Cursor --- */
+#custom-cursor {
+  position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+  border: 1.5px solid rgba(250,246,240,0.6); border-radius: 50%;
+  pointer-events: none; z-index: 10000; mix-blend-mode: difference;
+  transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s;
+}
+#custom-cursor.hovering { width: 48px; height: 48px; border-color: var(--gold); }
+#cursor-dot {
+  position: fixed; top: 0; left: 0; width: 4px; height: 4px;
+  background: rgba(250,246,240,0.8); border-radius: 50%;
+  pointer-events: none; z-index: 10001; transform: translate(-50%, -50%);
+}
+
+/* --- Chapter transition overlay --- */
+#transition-overlay {
+  position: fixed; inset: 0; z-index: 50; pointer-events: none;
+  background: #0a0a0f; opacity: 0; transition: opacity 0.4s;
+}
+
+/* --- Scroll prompt --- */
+#scroll-prompt {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  z-index: 90; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  opacity: 0; animation: fadeInPrompt 1s ease 3s forwards;
+}
+#scroll-prompt span {
+  font-family: var(--font-hand); font-size: 0.9rem; color: rgba(250,246,240,0.4);
+}
+#scroll-prompt svg { animation: scrollBounce 2s ease-in-out infinite; }
+@keyframes fadeInPrompt { to { opacity: 1; } }
+@keyframes scrollBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+/* --- Film grain --- */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* --- Progress indicator --- */
+#chapter-progress {
+  position: fixed; top: 0; left: 0; height: 2px; z-index: 200;
+  background: linear-gradient(90deg, var(--teal), var(--gold), var(--orange));
+  width: 0; transition: width 0.6s var(--ease-out-expo);
+}
+
+/* --- Cinematic vignette --- */
+#vignette {
+  position: fixed; inset: 0; z-index: 5; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%);
+}
+
+/* --- 3D perspective on all card elements --- */
+.stat-card, .proj-card, .bp-card, .cur-card {
+  transform-style: preserve-3d; perspective: 600px;
+}
+
+/* --- Chapter panel entrance animation --- */
+.chapter-page.active .chapter-inner {
+  animation: chapterEnter 0.8s var(--ease-out-expo) forwards;
+}
+@keyframes chapterEnter {
+  from { opacity: 0; transform: perspective(1200px) rotateX(3deg) translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: perspective(1200px) rotateX(0) translateY(0) scale(1); }
+}
+
+/* --- Dark panel subtle glow border --- */
+.ch-work .chapter-inner,
+.ch-skills .chapter-inner,
+.ch-play .chapter-inner {
+  position: relative;
+}
+.ch-work .chapter-inner::before,
+.ch-skills .chapter-inner::before,
+.ch-play .chapter-inner::before {
+  content: ''; position: absolute; inset: -1px; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(91,138,138,0.15), transparent 40%, transparent 60%, rgba(201,169,110,0.1));
+  z-index: -1; pointer-events: none;
+}
+
+/* --- Notebook page lined effect enhancement --- */
+.ch-about .chapter-inner::after {
+  content: ''; position: absolute; top: 0; left: 60px; bottom: 0; width: 1px;
+  background: rgba(200,113,61,0.12); pointer-events: none;
+}
+
+/* --- Chapter inner scrollbar for dark themes --- */
+.ch-work .chapter-inner::-webkit-scrollbar-thumb,
+.ch-skills .chapter-inner::-webkit-scrollbar-thumb,
+.ch-play .chapter-inner::-webkit-scrollbar-thumb {
+  background: rgba(250,246,240,0.15);
+}
+
+/* --- Flash Frame (Step 4) --- */
+#flash-frame {
+  position: fixed; inset: 0; z-index: 55; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(250,246,240,0.95), rgba(250,246,240,0.7));
+  opacity: 0; transition: opacity 0.08s ease-in;
+}
+
+/* --- Theme Toggle --- */
+#theme-toggle {
+  position: fixed; top: 24px; right: 80px; z-index: 200;
+  width: 44px; height: 24px; border-radius: 12px; cursor: pointer;
+  background: rgba(250,246,240,0.1); border: 1px solid rgba(250,246,240,0.2);
+  transition: all 0.6s var(--ease-out-expo); padding: 2px;
+}
+#theme-toggle::after {
+  content: ''; display: block; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--gold); transition: transform 0.4s var(--ease-elastic);
+  box-shadow: 0 0 8px rgba(201,169,110,0.4);
+}
+#theme-toggle.light { background: rgba(45,45,45,0.08); border-color: rgba(45,45,45,0.15); }
+#theme-toggle.light::after { transform: translateX(20px); background: var(--teal); }
+#theme-label {
+  position: fixed; top: 30px; right: 130px; z-index: 200;
+  font-family: var(--font-mono); font-size: 0.65rem; color: rgba(250,246,240,0.3);
+  letter-spacing: 0.08em; transition: color 0.6s;
+}
+
+/* ============ LIGHT MODE ============ */
+body.light-mode { background: #F5EFE5; }
+body.light-mode #vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(200,190,170,0.3) 100%);
+}
+body.light-mode #flash-frame {
+  background: radial-gradient(ellipse at center, rgba(10,10,15,0.9), rgba(10,10,15,0.6));
+}
+body.light-mode #nav-logo { color: rgba(45,45,45,0.7); mix-blend-mode: normal; }
+body.light-mode .nav-dot { border-color: rgba(45,45,45,0.2); }
+body.light-mode .nav-dot:hover, body.light-mode .nav-dot.active {
+  border-color: var(--teal); background: var(--teal);
+  box-shadow: 0 0 12px rgba(91,138,138,0.3);
+}
+body.light-mode .nav-dot::after { color: rgba(45,45,45,0.5); }
+body.light-mode #footer-bar { color: rgba(45,45,45,0.3); }
+body.light-mode #chapter-progress {
+  background: linear-gradient(90deg, var(--teal-dark), var(--teal), var(--gold));
+}
+body.light-mode #scroll-prompt span { color: rgba(45,45,45,0.35); }
+body.light-mode #scroll-prompt svg path { stroke: rgba(45,45,45,0.25); }
+body.light-mode #theme-label { color: rgba(45,45,45,0.3); }
+body.light-mode #custom-cursor { border-color: rgba(45,45,45,0.4); mix-blend-mode: normal; }
+body.light-mode #cursor-dot { background: rgba(45,45,45,0.6); }
+
+/* Light: shared base */
+body.light-mode .chapter-inner {
+  background: rgba(255,255,255,0.92); color: var(--graphite);
+  border-color: rgba(45,45,45,0.06);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.08);
+  backdrop-filter: blur(8px);
+}
+
+/* Light: Chapter 1 */
+body.light-mode .ch-about .chapter-inner {
+  border-left-color: var(--orange);
+  background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(91,138,138,0.06) 31px, rgba(91,138,138,0.06) 32px);
+}
+body.light-mode .ch-about h2 { color: var(--graphite); }
+body.light-mode .ch-about p { color: var(--graphite); }
+body.light-mode .ch-about .notebook-page {
+  background: rgba(250,246,240,0.6); border-left-color: rgba(200,113,61,0.25);
+}
+body.light-mode .ch-about .notebook-page:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+body.light-mode .ch-about .highlight::after { background: var(--gold-light); opacity: 0.35; }
+body.light-mode .ch-about .closing { color: var(--teal); }
+body.light-mode .stat-card { background: white; border-color: rgba(45,45,45,0.06); }
+body.light-mode .stat-card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-color: rgba(45,45,45,0.1); }
+body.light-mode .stat-number { color: var(--teal); }
+body.light-mode .stat-label { color: var(--graphite-mid); }
+
+/* Light: Chapter 2 */
+body.light-mode .ch-work .chapter-inner { border-color: rgba(91,138,138,0.1); }
+body.light-mode .ch-work h2 { color: var(--graphite); }
+body.light-mode .ch-work .section-label { color: var(--teal); }
+body.light-mode .proj-card { background: rgba(245,239,229,0.6); border-color: rgba(45,45,45,0.08); }
+body.light-mode .proj-card:hover { border-color: var(--teal); box-shadow: 0 10px 30px rgba(91,138,138,0.1); }
+body.light-mode .proj-title { color: var(--graphite); }
+body.light-mode .proj-desc { color: var(--graphite-mid); }
+body.light-mode .proj-tag { background: rgba(91,138,138,0.1); color: var(--teal-dark); }
+body.light-mode .proj-footer { color: var(--graphite-mid); }
+
+/* Light: Chapter 3 */
+body.light-mode .ch-skills .chapter-inner { border-color: rgba(201,169,110,0.1); }
+body.light-mode .ch-skills h2 { color: var(--graphite); }
+body.light-mode .ch-skills .section-label { color: var(--teal); }
+
+/* Light: Chapter 4 */
+body.light-mode .ch-build .chapter-inner {
+  border-left-color: var(--orange); border-color: rgba(200,113,61,0.1);
+  background-image: linear-gradient(rgba(45,45,45,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45,45,45,0.03) 1px, transparent 1px);
+}
+body.light-mode .ch-build h2 { color: var(--graphite); }
+body.light-mode .exp-content h3 { color: var(--graphite); }
+body.light-mode .exp-role { color: var(--graphite-light); }
+body.light-mode .exp-theme { color: var(--teal); }
+body.light-mode .exp-tag { background: rgba(91,138,138,0.1); color: var(--teal-dark); }
+body.light-mode .bp-card { background: white; border-color: rgba(45,45,45,0.08); }
+body.light-mode .bp-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-color: rgba(45,45,45,0.12); }
+body.light-mode .bp-title { color: var(--graphite); }
+body.light-mode .bp-note { color: var(--graphite-mid); }
+
+/* Light: Chapter 5 */
+body.light-mode .ch-play .chapter-inner { border-color: rgba(91,138,138,0.1); }
+body.light-mode .ch-play h2 { color: var(--graphite); }
+body.light-mode .ch-play .section-label { color: var(--teal); }
+body.light-mode .cur-card { background: rgba(245,239,229,0.5); border-color: rgba(45,45,45,0.06); }
+body.light-mode .cur-card:hover { border-color: var(--teal); }
+body.light-mode .cur-card h4 { color: var(--graphite); }
+body.light-mode .cur-card p { color: var(--graphite-mid); }
+
+/* Light: glow borders off */
+body.light-mode .ch-work .chapter-inner::before,
+body.light-mode .ch-skills .chapter-inner::before,
+body.light-mode .ch-play .chapter-inner::before { display: none; }
+
+/* --- About page contact mini-bar --- */
+.about-contact {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem;
+  padding-top: 1rem; border-top: 1px solid rgba(250,246,240,0.07);
+}
+.about-contact-link {
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: rgba(250,246,240,0.4); transition: color 0.3s;
+}
+.about-contact-link:hover { color: var(--teal-light); }
+body.light-mode .about-contact { border-top-color: rgba(45,45,45,0.08); }
+body.light-mode .about-contact-link { color: rgba(45,45,45,0.4); }
+body.light-mode .about-contact-link:hover { color: var(--teal-dark); }
+
+/* Light mode — fix invisible text in skills canvas hint & cur-card */
+body.light-mode #skills-canvas { filter: none; }
+body.light-mode .ch-play .cur-card h4 { color: var(--graphite); }
+body.light-mode .ch-play .cur-card p { color: var(--graphite-mid); }
+
+/* Light mode — fix chapter 1 h2 (inline style overrides need !important) */
+body.light-mode .ch-about h2 { color: var(--graphite) !important; }
+
+/* Light mode — fix footer play chapter text */
+body.light-mode .ch-play p[style] { color: rgba(45,45,45,0.25) !important; }
+
+/* Light mode — fix About chapter closing text */
+body.light-mode .ch-about .closing { color: var(--teal-dark); }
+
+/* Light mode — section label on build chapter */
+body.light-mode .ch-build .section-label { color: var(--orange); }
+
+/* Light mode — exp-num text */
+body.light-mode .exp-num { color: var(--orange); }
+
+/* --- Mobile bottom nav bar --- */
+#mobile-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
+  background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(250,246,240,0.07);
+  padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+  justify-content: space-around; align-items: center;
+}
+body.light-mode #mobile-nav {
+  background: rgba(245,239,229,0.9);
+  border-top-color: rgba(45,45,45,0.08);
+}
+.mob-nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; cursor: pointer; padding: 4px 8px;
+  font-family: var(--font-mono); font-size: 0.6rem; color: rgba(250,246,240,0.35);
+  transition: color 0.3s; letter-spacing: 0.04em;
+}
+body.light-mode .mob-nav-btn { color: rgba(45,45,45,0.35); }
+.mob-nav-btn .mob-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(250,246,240,0.2); transition: all 0.3s;
+}
+body.light-mode .mob-nav-btn .mob-dot { background: rgba(45,45,45,0.15); }
+.mob-nav-btn.active { color: var(--gold); }
+.mob-nav-btn.active .mob-dot { background: var(--gold); box-shadow: 0 0 8px rgba(201,169,110,0.5); transform: scale(1.4); }
+
+/* --- Swipe hint --- */
+#swipe-hint {
+  display: none;
+  position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+  z-index: 140; align-items: center; gap: 6px;
+  font-family: var(--font-hand); font-size: 0.9rem;
+  color: rgba(250,246,240,0.35); pointer-events: none;
+  animation: fadeInPrompt 1s ease 3.5s forwards; opacity: 0;
+}
+body.light-mode #swipe-hint { color: rgba(45,45,45,0.3); }
+#swipe-hint svg { animation: swipeAnim 1.8s ease-in-out infinite; }
+@keyframes swipeAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+@media (max-width: 768px) {
+  #mobile-nav { display: flex; }
+  #swipe-hint { display: flex; }
+  #scroll-prompt { display: none !important; }
+  #footer-bar { padding-bottom: calc(60px + max(10px, env(safe-area-inset-bottom))); }
+  .chapter-inner { max-height: calc(80vh - 60px); }
+}
+  body { cursor: auto; }
+  #custom-cursor, #cursor-dot { display: none; }
+  #nav-hud { right: 12px; gap: 14px; }
+  .nav-dot::after { display: none; }
+  .chapter-inner { padding: 1.5rem; max-height: 80vh; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .project-grid { grid-template-columns: 1fr; }
+  .bp-grid { grid-template-columns: repeat(2, 1fr); }
+  .curiosity-grid { grid-template-columns: 1fr; }
+  .exp-block { flex-direction: column; gap: 0.5rem; }
+  .exp-marker { flex-direction: row; width: auto; }
+  .exp-line { height: 2px; width: auto; flex: 1; }
+  #nav-logo { font-size: 1.1rem; }
+  .ch-about .chapter-inner::after { display: none; }
+  #theme-toggle { right: 50px; top: 16px; }
+  #theme-label { display: none; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .bp-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ========== CINEMATIC LOADER ========== -->
+  <div id="cinematic-loader">
+    <canvas id="loader-canvas"></canvas>
+    <span class="loader-equation">initializing...</span>
+    <span class="loader-status">loading assets...</span>
+  </div>
+
+  <!-- ========== CURSOR ========== -->
+  <div id="custom-cursor"></div>
+  <div id="cursor-dot"></div>
+
+  <!-- ========== THREE.JS CANVAS ========== -->
+  <canvas id="three-canvas"></canvas>
+
+  <!-- ========== CINEMATIC VIGNETTE ========== -->
+  <div id="vignette"></div>
+
+  <!-- ========== CHAPTER PROGRESS ========== -->
+  <div id="chapter-progress"></div>
+
+  <!-- ========== TRANSITION OVERLAY ========== -->
+  <div id="transition-overlay"></div>
+
+  <!-- ========== FLASH FRAME (Step 4) ========== -->
+  <div id="flash-frame"></div>
+
+  <!-- ========== THEME TOGGLE ========== -->
+    <div id="graph-curve-formula" style="font-family:'JetBrains Mono',monospace;font-size:clamp(0.75rem,1.5vw,0.95rem);color:rgba(91,138,138,0.9);text-shadow:0 2px 8px rgba(0,0,0,0.4);transition:color 0.5s;">N(μ,σ²)</div>
+
+  <span id="theme-label">dark</span>
+  <button id="theme-toggle" aria-label="Toggle theme"></button>
+
+  <!-- ========== NAV LOGO ========== -->
+  <a href="#" id="nav-logo">Shivani R</a>
+
+  <!-- ========== NAVIGATION HUD ========== -->
+  <nav id="nav-hud">
+    <button class="nav-dot active" data-label="Getting to Know Me" data-index="0"></button>
+    <button class="nav-dot" data-label="Explore Work" data-index="1"></button>
+    <button class="nav-dot" data-label="Skills &amp; Tools" data-index="2"></button>
+    <button class="nav-dot" data-label="Building with Curiosity" data-index="3"></button>
+    <button class="nav-dot" data-label="Enter Playground" data-index="4"></button>
+  </nav>
+
+  <!-- ========== SCROLL PROMPT ========== -->
+  <div id="scroll-prompt">
+    <span>scroll to explore</span>
+    <svg width="20" height="30" viewBox="0 0 20 30"><path d="M10 0 L10 25 M4 19 L10 25 L16 19" stroke="rgba(250,246,240,0.4)" stroke-width="1.5" fill="none"/></svg>
+  </div>
+
+  <!-- ========== SWIPE HINT (mobile) ========== -->
+  <div id="swipe-hint">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    <span>swipe to navigate</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(180deg)"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </div>
+
+  <!-- ========== MOBILE NAV BAR ========== -->
+  <nav id="mobile-nav">
+    <button class="mob-nav-btn active" data-index="0"><div class="mob-dot"></div>About</button>
+    <button class="mob-nav-btn" data-index="1"><div class="mob-dot"></div>Work</button>
+    <button class="mob-nav-btn" data-index="2"><div class="mob-dot"></div>Skills</button>
+    <button class="mob-nav-btn" data-index="3"><div class="mob-dot"></div>Experience</button>
+    <button class="mob-nav-btn" data-index="4"><div class="mob-dot"></div>Playground</button>
+  </nav>
+
+  <!-- ========== CHAPTER CONTAINER ========== -->
+  <div id="chapter-container">
+
+    <!-- ===== CHAPTER 1: GETTING TO KNOW ME ===== -->
+    <div class="chapter-page ch-about active" data-chapter="0">
+      <div class="chapter-inner">
+        <span class="section-label reveal-item">Getting to know me</span>
+        <h2 class="reveal-item" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:2rem;color:var(--graphite)">The Story So Far</h2>
+
+        <div class="story-block reveal-item">
+          <span class="story-annotation">where it began</span>
+          <div class="notebook-page">
+            <p>I come from <span class="highlight">Statistics and Computer Science</span>, not as separate tracks, but as one lens. I learned early that data without context is noise, and that making sense of it requires both mathematical rigour and the ability to explain your reasoning clearly.</p>
+          </div>
+        </div>
+
+        <div class="story-block reveal-item">
+          <span class="story-annotation">the turning point</span>
+          <div class="notebook-page">
+            <p>Then came AI, then robotics. My work now sits at the intersection of <span class="highlight">data systems, embedded AI, and making technical ideas genuinely accessible</span>. To a 10-year-old and to a hiring manager, equally.</p>
+          </div>
+        </div>
+
+        <div class="story-block reveal-item">
+          <span class="story-annotation">what I do</span>
+          <div class="notebook-page">
+            <p>At <span class="highlight">JR BOTICS</span>, I work as a Technical Trainer and Product Development Lead. I design and deliver AI and Robotics curriculum across multiple Bengaluru schools, and I also lead prototype and product builds: Arduino and ESP32 systems, computer vision pipelines, ML-integrated hardware. The teaching and the building happen in the same room, which keeps both honest.</p>
+          </div>
+        </div>
+
+        <div class="story-block reveal-item">
+          <span class="story-annotation">the research side</span>
+          <div class="notebook-page">
+            <p>I've applied statistical and econometric methods to real-world datasets, including a research stint at the <span class="highlight">NSSO, Government of India</span>, working on PLFS labour data. My academic foundation in regression, modelling and big data systems runs parallel to the hands-on work.</p>
+          </div>
+        </div>
+
+        <div class="story-block reveal-item">
+          <span class="story-annotation">right now</span>
+          <div class="notebook-page">
+            <p>MSc Data Analytics at <span class="highlight">Christ University, Bangalore</span>. Building deeper foundations in ML systems, data engineering and applied research, while shipping actual products at work.</p>
+            <p class="closing">Open to roles where I can build things, analyse things, and explain both.</p>
+          </div>
+        </div>
+
+        <!-- Contact mini-bar -->
+        <div class="about-contact reveal-item">
+          <a href="mailto:shivanir1105@gmail.com" class="about-contact-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13L2 4"/></svg>
+            shivanir1105@gmail.com
+          </a>
+          <a href="https://linkedin.com/in/shivani-r-1a3ab3283" target="_blank" class="about-contact-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/Obedientononline" target="_blank" class="about-contact-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+            GitHub
+          </a>
+        </div>
+
+      </div><!-- end .chapter-inner -->
+    </div><!-- end .ch-about -->
+
+    <!-- ===== CHAPTER 2: EXPLORE WORK ===== -->
+    <div class="chapter-page ch-work" data-chapter="1">
+      <div class="chapter-inner">
+        <span class="section-label reveal-item">Explore Work</span>
+        <h2 class="reveal-item">Selected Projects</h2>
+        <div class="project-grid" id="project-grid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CHAPTER 3: SKILLS & TOOLS ===== -->
+    <div class="chapter-page ch-skills" data-chapter="2">
+      <div class="chapter-inner">
+        <span class="section-label reveal-item">What I work with</span>
+        <h2 class="reveal-item">Skills &amp; Tools</h2>
+        <canvas id="skills-canvas" class="reveal-item"></canvas>
+      </div>
+    </div>
+
+    <!-- ===== CHAPTER 4: BUILDING WITH CURIOSITY ===== -->
+    <div class="chapter-page ch-build" data-chapter="3">
+      <div class="chapter-inner">
+        <span class="section-label reveal-item">Experience &amp; Roles</span>
+        <h2 class="reveal-item">Where I've Been</h2>
+
+        <div class="exp-timeline">
+          <div class="exp-block reveal-item">
+            <div class="exp-marker"><span class="exp-num">01</span><div class="exp-line"></div></div>
+            <div class="exp-content">
+              <span class="exp-theme">Research + Data + Government Analytics</span>
+              <h3>National Sample Survey Office</h3>
+              <p class="exp-role">Research Intern, Government of India</p>
+              <div class="exp-tags">
+                <span class="exp-tag">Econometric Analysis</span>
+                <span class="exp-tag">PLFS 2017-2024</span>
+                <span class="exp-tag">Gender Labour Trends</span>
+                <span class="exp-tag">WLS Regression</span>
+                <span class="exp-tag">Statistical Modelling</span>
+                <span class="exp-tag">Python Ecosystem</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-block reveal-item">
+            <div class="exp-marker"><span class="exp-num">02</span><div class="exp-line"></div></div>
+            <div class="exp-content">
+              <h3>JR BOTICS</h3>
+              <span class="exp-theme">Teaching + Robotics + AI Systems</span>
+              <p class="exp-role">AI &amp; Robotics Trainer | 4 Schools | 50+ Projects</p>
+              <div class="bp-grid">
+                <div class="bp-card"><div class="bp-title">Arduino &amp; ESP32</div><div class="bp-note">embedded systems</div></div>
+                <div class="bp-card"><div class="bp-title">Emotion Recognition</div><div class="bp-note">computer vision</div></div>
+                <div class="bp-card"><div class="bp-title">Pose Estimation</div><div class="bp-note">body tracking</div></div>
+                <div class="bp-card"><div class="bp-title">RFID Systems</div><div class="bp-note">smart access</div></div>
+                <div class="bp-card"><div class="bp-title">Home Automation</div><div class="bp-note">IoT integration</div></div>
+                <div class="bp-card"><div class="bp-title">Crop Disease Detection</div><div class="bp-note">ML + agriculture</div></div>
+                <div class="bp-card"><div class="bp-title">Drowsiness Detection</div><div class="bp-note">safety systems</div></div>
+                <div class="bp-card"><div class="bp-title">NLP + Chatbots</div><div class="bp-note">language AI</div></div>
+                <div class="bp-card"><div class="bp-title">Data Visualization</div><div class="bp-note">charts + dashboards</div></div>
+                <div class="bp-card"><div class="bp-title">3D Printing</div><div class="bp-note">rapid prototyping</div></div>
+                <div class="bp-card"><div class="bp-title">Curriculum Design</div><div class="bp-note">K-10 AI syllabus</div></div>
+                <div class="bp-card"><div class="bp-title">IoT Sensors</div><div class="bp-note">real-time data</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CHAPTER 5: ENTER PLAYGROUND ===== -->
+    <div class="chapter-page ch-play" data-chapter="4">
+      <div class="chapter-inner">
+        <span class="section-label reveal-item">Always exploring</span>
+        <h2 class="reveal-item">Things I'm Curious About</h2>
+
+        <div class="curiosity-grid">
+          <div class="cur-card reveal-item"><h4>Learning Speed</h4><p>Why do some people learn faster than others?</p></div>
+          <div class="cur-card reveal-item"><h4>Machine Context</h4><p>Can machines ever truly understand context?</p></div>
+          <div class="cur-card reveal-item"><h4>Edge of Knowledge</h4><p>What happens at the edge of what we understand?</p></div>
+          <div class="cur-card reveal-item"><h4>Teaching Paradox</h4><p>Why does teaching something always make YOU understand it better?</p></div>
+          <div class="cur-card reveal-item"><h4>Design for Curiosity</h4><p>How do you design for curiosity, not just function?</p></div>
+          <div class="cur-card reveal-item"><h4>Fearless Research</h4><p>What would research look like if it wasn't afraid to be wrong?</p></div>
+        </div>
+
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap" class="reveal-item">
+          <a href="mailto:shivanir1105@gmail.com" style="color:var(--teal-light);font-size:0.85rem;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13L2 4"/></svg>
+            shivanir1105@gmail.com
+          </a>
+          <a href="https://github.com/Obedientononline" target="_blank" style="color:var(--teal-light);font-size:0.85rem;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+            GitHub
+          </a>
+          <a href="https://linkedin.com/in/shivani-r-1a3ab3283" target="_blank" style="color:var(--teal-light);font-size:0.85rem;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+        <p style="font-size:0.7rem;color:rgba(250,246,240,0.2);margin-top:1.5rem;font-family:var(--font-mono)" class="reveal-item">© 2026 Shivani R | Made with curiosity</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== FOOTER BAR ========== -->
+  <div id="footer-bar">
+    <span>Shivani R | 2026</span>
+    <span id="chapter-label" style="font-family:var(--font-hand);font-size:0.9rem;color:rgba(250,246,240,0.2)">Getting to Know Me</span>
+  </div>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js';
+
+/**
+ * Rollercoaster Engine v3 — Real visible rollercoaster with dual rails,
+ * cross-ties, support pillars, front cart, graph labels & axes
+ */
+
+const CURVES = {
+  normal: (t) => { const x=(t-0.5)/0.18; return 40*Math.exp(-0.5*x*x); },
+  fDist: (t) => { const x=t*5; return x<0.1?0:45*Math.pow(x,1.2)*Math.exp(-x*0.9); },
+  tDist: (t) => { const x=(t-0.5)*6; return 35*Math.pow(1+(x*x)/3,-2)*2.5; },
+  regression: (t) => 15*Math.sin(t*Math.PI*3)+20*t,
+  neural: (t) => 25*Math.sin(t*Math.PI*4)*Math.cos(t*Math.PI*2)+10,
+};
+const TRACKS = [
+  { fn: CURVES.normal, color: 0x5B8A8A, name: 'N(μ,σ²)', label: 'Normal Distribution' },
+  { fn: CURVES.fDist, color: 0xC8713D, name: 'F(d₁,d₂)', label: 'F-Distribution' },
+  { fn: CURVES.tDist, color: 0x4A4E7A, name: 't(ν)', label: 't-Distribution' },
+  { fn: CURVES.regression, color: 0xC9A96E, name: 'ŷ=f(x)', label: 'Regression Curve' },
+  { fn: CURVES.neural, color: 0x5B8A8A, name: 'NN(θ)', label: 'Neural Pathway' },
+];
+
+class RollercoasterEngine {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.1, 2000);
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    this.renderer.setSize(innerWidth, innerHeight);
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 0.8;
+    this.chapter = 0; this.mouseX = 0; this.mouseY = 0;
+    this.trackGroup = null; this.cameraPath = null;
+    this.ambientParticles = null; this.windParticles = null;
+    this.gridGroup = null; this.equationSprites = [];
+    this.cartGroup = null; this.baseFOV = 65; this.isDark = true;
+    this.trans = { active:false, progress:0, target:0, speed:0.12,
+      onFlash:null, onComplete:null, flashFired:false, buildFired:false };
+    this._init(); this._animate();
+  }
+
+  _init() {
+    this.scene.fog = new THREE.FogExp2(0x0a0a0f, 0.005);
+    this.camera.position.set(0,22,90); this.camera.lookAt(0,18,0);
+    this.ambientLight = new THREE.AmbientLight(0x1a1a2e, 0.6);
+    this.scene.add(this.ambientLight);
+    this.lights = [
+      new THREE.PointLight(0x5B8A8A,2,250),
+      new THREE.PointLight(0xC9A96E,1.5,250),
+      new THREE.PointLight(0xC8713D,1,200),
+    ];
+    this.lights[0].position.set(-30,40,20);
+    this.lights[1].position.set(30,30,-20);
+    this.lights[2].position.set(0,20,40);
+    this.lights.forEach(l=>this.scene.add(l));
+    this._createGrid(); this._createParticles(); this._createWindParticles();
+    this._createEquations(); this._createCart(); this._buildTrack(0);
+    addEventListener('resize',()=>{
+      this.camera.aspect=innerWidth/innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(innerWidth,innerHeight);
+    });
+    document.addEventListener('mousemove',e=>{
+      this.mouseX=(e.clientX/innerWidth-0.5)*2;
+      this.mouseY=(e.clientY/innerHeight-0.5)*2;
+    });
+  }
+
+  _createGrid() {
+    this.gridGroup = new THREE.Group();
+    const m = new THREE.LineBasicMaterial({color:0x5B8A8A,transparent:true,opacity:0.06});
+    for(let i=-100;i<=100;i+=5){
+      this.gridGroup.add(
+        new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i,-2,-100),new THREE.Vector3(i,-2,100)]),m),
+        new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-100,-2,i),new THREE.Vector3(100,-2,i)]),m)
+      );
+    }
+    this.scene.add(this.gridGroup);
+  }
+
+  _createParticles() {
+    const n=800,p=new Float32Array(n*3),c=new Float32Array(n*3);
+    const pal=[0x5B8A8A,0xC9A96E,0xC8713D,0x4A4E7A,0xFAF6F0].map(v=>new THREE.Color(v));
+    for(let i=0;i<n;i++){
+      p[i*3]=(Math.random()-0.5)*300; p[i*3+1]=Math.random()*100-10; p[i*3+2]=(Math.random()-0.5)*300;
+      const col=pal[Math.floor(Math.random()*pal.length)];
+      c[i*3]=col.r; c[i*3+1]=col.g; c[i*3+2]=col.b;
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(p,3));
+    g.setAttribute('color',new THREE.BufferAttribute(c,3));
+    this.ambientParticles=new THREE.Points(g,new THREE.PointsMaterial({
+      size:1.5,vertexColors:true,transparent:true,opacity:0.5,
+      blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true
+    }));
+    this.scene.add(this.ambientParticles);
+  }
+
+  _createWindParticles() {
+    const n=200,p=new Float32Array(n*3);
+    for(let i=0;i<n;i++){p[i*3]=(Math.random()-0.5)*40;p[i*3+1]=Math.random()*20;p[i*3+2]=(Math.random()-0.5)*40;}
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(p,3));
+    this.windParticles=new THREE.Points(g,new THREE.PointsMaterial({
+      size:0.8,color:0xFAF6F0,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false
+    }));
+    this.scene.add(this.windParticles);
+  }
+
+  _makeSprite(text,color,size) {
+    const cvs=document.createElement('canvas'); cvs.width=512; cvs.height=64;
+    const ctx=cvs.getContext('2d');
+    ctx.font=`${size||24}px Caveat, cursive`; ctx.fillStyle=color||'rgba(201,169,110,0.35)';
+    ctx.fillText(text,10,40);
+    const s=new THREE.Sprite(new THREE.SpriteMaterial({
+      map:new THREE.CanvasTexture(cvs),transparent:true,opacity:0.4,
+      blending:THREE.AdditiveBlending,depthWrite:false
+    }));
+    s.scale.set(20,2.5,1); return s;
+  }
+
+  _createEquations() {
+    const eqs=[
+      {t:'f(x) = (1/σ√2π) e^(-(x-μ)²/2σ²)',x:-60,y:45,z:-30},
+      {t:'P(A|B) = P(B|A)P(A)/P(B)',x:50,y:35,z:-40},
+      {t:'∇f(x) = lim[f(x+h)-f(x)]/h',x:-40,y:55,z:20},
+      {t:'R² = 1 - SS_res/SS_tot',x:70,y:50,z:10},
+      {t:'ŷ = Xβ + ε',x:-20,y:30,z:-50},
+      {t:'Σ xᵢ² / n',x:30,y:60,z:-20},
+      {t:'μ ± zσ/√n',x:-70,y:25,z:15},
+      {t:'∫ f(x)dx',x:55,y:20,z:30},
+    ];
+    this.equationSprites=[];
+    eqs.forEach(eq=>{
+      const s=this._makeSprite(eq.t);
+      s.position.set(eq.x,eq.y,eq.z);
+      s.userData={baseY:eq.y,phase:Math.random()*Math.PI*2};
+      this.scene.add(s); this.equationSprites.push(s);
+    });
+  }
+
+  // ===== REAL ROLLERCOASTER TRACK =====
+  _makeTrackCurve(trackDef, zOff=0) {
+    const pts=[]; const RAIL_GAUGE=1.4;
+    for(let i=0;i<=200;i++){
+      const t=i/200, x=(t-0.5)*150, y=Math.max(0,trackDef.fn(t)), z=0;
+      pts.push(new THREE.Vector3(x,y,z));
+    }
+    const curve=new THREE.CatmullRomCurve3(pts);
+    const grp=new THREE.Group();
+    const railMat=new THREE.MeshPhongMaterial({color:trackDef.color,emissive:trackDef.color,emissiveIntensity:0.3,shininess:100});
+    const railGlow=new THREE.MeshBasicMaterial({color:trackDef.color,transparent:true,opacity:0.08,blending:THREE.AdditiveBlending,depthWrite:false});
+
+    // Two rails: front (z=+1) and back (z=-1) so graph reads as 2D from front
+    for(const side of[-1,1]){
+      const railPts=[];
+      for(let i=0;i<=200;i++){
+        const t=i/200;
+        const p=curve.getPointAt(t);
+        railPts.push(new THREE.Vector3(p.x, p.y, side*0.9));
+      }
+      const railCurve=new THREE.CatmullRomCurve3(railPts);
+      grp.add(new THREE.Mesh(new THREE.TubeGeometry(railCurve,200,0.10,6,false),railMat));
+      grp.add(new THREE.Mesh(new THREE.TubeGeometry(railCurve,200,0.38,6,false),railGlow));
+    }
+
+    // Cross-ties: span from z=-0.9 to z=+0.9 (front to back rail)
+    const tieMat=new THREE.MeshPhongMaterial({color:0x333344,emissive:trackDef.color,emissiveIntensity:0.1});
+    for(let i=0;i<60;i++){
+      const t=(i+1)/61;
+      const p=curve.getPointAt(t);
+      const tie=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.08,2.0),tieMat);
+      tie.position.set(p.x, p.y-0.08, 0);
+      grp.add(tie);
+    }
+
+    // Support pillars — vertical drops from rail to baseline
+    const pillarMat=new THREE.MeshPhongMaterial({color:0x2a2a38,emissive:trackDef.color,emissiveIntensity:0.06,transparent:true,opacity:0.7});
+    for(let i=0;i<30;i++){
+      const t=(i+1)/31;
+      const p=curve.getPointAt(t);
+      if(p.y > 1.5){
+        const h=p.y;
+        const pillar=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.09,h,6),pillarMat);
+        pillar.position.set(p.x, h/2, 0);
+        grp.add(pillar);
+      }
+    }
+
+    // Data point spheres on track
+    for(let i=0;i<12;i++){
+      const p=curve.getPointAt((i+1)/13);
+      const s=new THREE.Mesh(new THREE.SphereGeometry(0.5,12,12),
+        new THREE.MeshPhongMaterial({color:0xC8713D,emissive:0xC8713D,emissiveIntensity:0.5}));
+      s.position.copy(p); s.position.y+=0.5; grp.add(s);
+    }
+
+    return {grp, curve};
+  }
+
+  // ===== CINEMATIC AXIS & LABEL SYSTEM =====
+  _createAxes(trackDef,curve) {
+    const grp=new THREE.Group();
+    const axMat=new THREE.LineBasicMaterial({color:0xC9A96E,transparent:true,opacity:0.18});
+    const gridMat=new THREE.LineBasicMaterial({color:trackDef.color,transparent:true,opacity:0.04});
+
+    // X axis
+    grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-85,-2,0),new THREE.Vector3(85,-2,0)]),axMat));
+    // Y axis
+    grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-80,-2,0),new THREE.Vector3(-80,55,0)]),axMat));
+
+    // Graph-paper reference lines (subtle)
+    for(let x=-60;x<=60;x+=20){
+      grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,-2,0),new THREE.Vector3(x,50,0)]),gridMat));
+      // Tick marks
+      grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,-2,0),new THREE.Vector3(x,0,0)]),axMat));
+      // Tick value labels
+      const val=Math.round((x+80)/20);
+      const ts=this._makeSprite(String(val),'rgba(201,169,110,0.3)',16);
+      ts.position.set(x,-4,0); ts.scale.set(4,0.8,1); grp.add(ts);
+    }
+    for(let y=0;y<=50;y+=10){
+      grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-80,y,0),new THREE.Vector3(80,y,0)]),gridMat));
+      // Tick marks
+      grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-80,y,0),new THREE.Vector3(-78,y,0)]),axMat));
+      // Y tick labels
+      const ys=this._makeSprite(String(y),'rgba(201,169,110,0.3)',16);
+      ys.position.set(-85,y,0); ys.scale.set(4,0.8,1); grp.add(ys);
+    }
+
+    // X-axis label
+    const xLabel=this._makeSprite('x →','rgba(201,169,110,0.5)',22);
+    xLabel.position.set(82,-1,0); xLabel.scale.set(7,1.2,1); grp.add(xLabel);
+    // Y-axis label
+    const yLabel=this._makeSprite('f(x)','rgba(201,169,110,0.5)',22);
+    yLabel.position.set(-82,52,0); yLabel.scale.set(9,1.4,1); grp.add(yLabel);
+
+    // ── LARGE CINEMATIC CURVE NAME ──
+    const nameSprite=this._makeSprite(trackDef.label, 'rgba(250,246,240,0.55)', 36);
+    nameSprite.position.set(0,56,5); nameSprite.scale.set(40,5,1);
+    nameSprite.material.opacity=0.7;
+    grp.add(nameSprite);
+
+    // ── FORMULA below the name ──
+    const formulaSprite=this._makeSprite(trackDef.name, 'rgba(91,138,138,0.6)', 28);
+    formulaSprite.position.set(0,50,5); formulaSprite.scale.set(20,3,1);
+    formulaSprite.material.opacity=0.6;
+    grp.add(formulaSprite);
+
+    return grp;
+  }
+
+  // ===== FRONT CART (visible during ride) =====
+  _createCart() {
+    this.cartGroup = new THREE.Group();
+    const bodyMat = new THREE.MeshPhongMaterial({color:0x2a2a35,emissive:0x5B8A8A,emissiveIntensity:0.15,shininess:80});
+    // Cart body
+    const body = new THREE.Mesh(new THREE.BoxGeometry(1.6,0.6,2.4),bodyMat);
+    body.position.y=-0.8;
+    this.cartGroup.add(body);
+    // Side rails
+    const sideM = new THREE.MeshPhongMaterial({color:0x444450,emissive:0xC9A96E,emissiveIntensity:0.1});
+    for(const s of[-1,1]){
+      const rail=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.4,2.4),sideM);
+      rail.position.set(s*0.85,-0.5,0); this.cartGroup.add(rail);
+    }
+    // Front bar
+    const bar=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,1.6,8),sideM);
+    bar.position.set(0,-0.5,-1.2); bar.rotation.z=Math.PI/2;
+    this.cartGroup.add(bar);
+    this.cartGroup.visible=false;
+    this.scene.add(this.cartGroup);
+  }
+
+  _clearTrack() {
+    if(this.trackGroup) this.scene.remove(this.trackGroup);
+    this.trackGroup=null;
+  }
+
+  _buildTrack(idx) {
+    this._clearTrack();
+    this.trackGroup=new THREE.Group();
+    const def=TRACKS[idx%TRACKS.length];
+    const main=this._makeTrackCurve(def);
+    this.trackGroup.add(main.grp);
+    this.cameraPath=main.curve;
+    this.trackGroup.add(this._createAxes(def,main.curve));
+    // Endpoint platform
+    this.trackGroup.add(this._createEndpoint(main.curve, def));
+    this.scene.add(this.trackGroup);
+    this._updateEnv(idx);
+    this._updateGraphLabel(def);
+  }
+
+  // ===== MINIMAL GLOWING ENDPOINT =====
+  _createEndpoint(curve, def) {
+    const grp = new THREE.Group();
+    const endPt = curve.getPointAt(0.98);
+    // Core sphere
+    const core = new THREE.Mesh(new THREE.SphereGeometry(0.6,16,16),
+      new THREE.MeshPhongMaterial({color:def.color,emissive:def.color,emissiveIntensity:0.8}));
+    core.position.copy(endPt);
+    grp.add(core);
+    // Outer glow
+    const glow = new THREE.Mesh(new THREE.SphereGeometry(1.5,16,16),
+      new THREE.MeshBasicMaterial({color:def.color,transparent:true,opacity:0.12,blending:THREE.AdditiveBlending,depthWrite:false}));
+    glow.position.copy(endPt);
+    grp.add(glow);
+    // Ring
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.2,0.05,8,32),
+      new THREE.MeshBasicMaterial({color:def.color,transparent:true,opacity:0.2,blending:THREE.AdditiveBlending}));
+    ring.position.copy(endPt); ring.rotation.x=Math.PI/2;
+    grp.add(ring);
+    return grp;
+  }
+
+  _updateEnv(ch) {
+    const envs=this.isDark
+      ? [{fog:0x0a0a0f},{fog:0x0a0f15},{fog:0x0a0a14},{fog:0x0f0a08},{fog:0x050810}]
+      : [{fog:0xF5EFE5},{fog:0xEDE7DA},{fog:0xE8E2D5},{fog:0xF0EAE0},{fog:0xE5DFD5}];
+    const e=envs[ch]||envs[0];
+    this.scene.fog.color.setHex(e.fog);
+    this.renderer.setClearColor(e.fog,1);
+  }
+
+  // ===== CINEMATIC FRONT-SEAT COASTER TRANSITION =====
+  startTransition(target, onFlash, onComplete) {
+    if(this.trans.active) return;
+    this.trans={active:true,progress:0,target,speed:0.1,
+      onFlash:onFlash||null,onComplete:onComplete||null,
+      flashFired:false,buildFired:false,cartT:0};
+    this.cartGroup.visible=true;
+  }
+
+  _easeInOut(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+
+  _runTransition(dt,elapsed) {
+    const tr=this.trans; if(!tr.active) return;
+    tr.progress+=dt*tr.speed;
+    const p=tr.progress;
+
+    if(p<0.75) {
+      // ── FULL FRONT-SEAT COASTER RIDE ──
+      // Camera stays locked behind cart, looking forward along rails
+      const rp=p/0.75;
+      const eased=this._easeInOut(rp);
+      const curveT=eased*0.95; // traverse almost entire curve
+      tr.cartT=curveT;
+
+      if(this.cameraPath){
+        const pos=this.cameraPath.getPointAt(Math.min(curveT,0.99));
+        const lookT=Math.min(curveT+0.06,0.99);
+        const look=this.cameraPath.getPointAt(lookT);
+        const tang=this.cameraPath.getTangentAt(Math.min(curveT,0.99)).normalize();
+        const up=new THREE.Vector3(0,1,0);
+        const right=new THREE.Vector3().crossVectors(tang,up).normalize();
+
+        // Camera rides 2.5 units above track
+        const camPos=pos.clone().add(new THREE.Vector3(0,2.5,0));
+        this.camera.position.lerp(camPos,0.12);
+
+        // Look ahead along the track
+        const lookPos=look.clone().add(new THREE.Vector3(0,1.8,0));
+        this.camera.lookAt(lookPos);
+
+        // Natural banking into curves
+        const bank=Math.atan2(tang.x,tang.z)*0.12;
+        this.camera.rotation.z+=(bank-this.camera.rotation.z)*0.06;
+
+        // Subtle speed-based FOV (gentle)
+        const spd=Math.sin(rp*Math.PI)*0.5;
+        this.camera.fov+=(this.baseFOV+spd*8-this.camera.fov)*0.05;
+        this.camera.updateProjectionMatrix();
+
+        // Micro vibration for realism
+        this.camera.position.x+=Math.sin(elapsed*12)*0.015*spd;
+        this.camera.position.y+=Math.cos(elapsed*10)*0.01*spd;
+
+        // Cart stays just ahead and below camera
+        const cartPos=pos.clone().add(new THREE.Vector3(0,-0.3,0));
+        this.cartGroup.position.lerp(cartPos,0.15);
+        this.cartGroup.lookAt(look);
+
+        // Wind particles
+        if(this.windParticles){
+          this.windParticles.material.opacity=spd*0.35;
+          this.windParticles.position.copy(this.camera.position).add(tang.clone().multiplyScalar(-3));
+          const wp=this.windParticles.geometry.attributes.position;
+          for(let i=0;i<wp.count;i++){wp.array[i*3+2]-=0.4*spd;if(wp.array[i*3+2]<-20)wp.array[i*3+2]=20;}
+          wp.needsUpdate=true;
+        }
+      }
+
+    } else if(p<0.82) {
+      // ── ENDPOINT GLOW — brief pause at the glowing node ──
+      const rp=(p-0.75)/0.07;
+      if(this.cameraPath){
+        const endPos=this.cameraPath.getPointAt(0.96);
+        const camTarget=endPos.clone().add(new THREE.Vector3(0,3,4));
+        this.camera.position.lerp(camTarget,0.04);
+        this.camera.lookAt(endPos.x,endPos.y+1,endPos.z);
+        this.camera.rotation.z*=0.95;
+        this.camera.fov+=(this.baseFOV-this.camera.fov)*0.06;
+        this.camera.updateProjectionMatrix();
+        this.cartGroup.position.lerp(endPos.clone().add(new THREE.Vector3(0,-0.3,0)),0.06);
+      }
+      if(!tr.buildFired&&rp>0.7){tr.buildFired=true;this._buildTrack(tr.target);}
+      if(this.windParticles)this.windParticles.material.opacity*=0.92;
+
+    } else if(p<0.87) {
+      // ── FLASH FRAME ──
+      if(!tr.flashFired){tr.flashFired=true;this.cartGroup.visible=false;if(tr.onFlash)tr.onFlash();}
+
+    } else if(p<1.0) {
+      // ── NEW CHAPTER EMERGES ──
+      this.camera.position.x+=(0-this.camera.position.x)*0.04;
+      this.camera.position.y+=(15-this.camera.position.y)*0.04;
+      this.camera.position.z+=(60-this.camera.position.z)*0.04;
+      this.camera.fov+=(this.baseFOV-this.camera.fov)*0.06;
+      this.camera.rotation.z*=0.9;
+      this.camera.updateProjectionMatrix();
+      this.camera.lookAt(0,10,0);
+      if(this.windParticles)this.windParticles.material.opacity=0;
+
+    } else {
+      tr.active=false; this.chapter=tr.target;
+      this.camera.position.set(0,22,90); this.camera.lookAt(0,18,0);
+      this.camera.fov=this.baseFOV; this.camera.rotation.z=0;
+      this.camera.updateProjectionMatrix();
+      this.cartGroup.visible=false;
+      if(tr.onComplete)tr.onComplete();
+    }
+  }
+
+
+  _updateGraphLabel(def) {
+    const nameEl = document.getElementById('graph-info-name');
+    const formulaEl = document.getElementById('graph-info-formula');
+    if (!nameEl || !formulaEl) return;
+    nameEl.style.opacity = '0'; formulaEl.style.opacity = '0';
+    setTimeout(() => {
+      nameEl.textContent = def.label;
+      formulaEl.textContent = def.name;
+      const hex = def.color.toString(16).padStart(6,'0');
+      formulaEl.style.color = '#' + hex;
+      nameEl.style.opacity = '1'; formulaEl.style.opacity = '1';
+    }, 350);
+  }
+
+  setTheme(dark) {
+    this.isDark=dark;
+    this._updateEnv(this.chapter);
+    const nameEl = document.getElementById('graph-info-name');
+    const descEl = document.getElementById('graph-info-formula');
+    if (nameEl) nameEl.style.color = dark ? 'rgba(250,246,240,0.85)' : 'rgba(45,45,45,0.85)';
+    if (descEl) descEl.style.color = dark ? 'rgba(91,138,138,0.9)' : 'rgba(74,114,114,0.9)';
+    if(this.ambientParticles)this.ambientParticles.material.opacity=dark?0.5:0.25;
+    if(this.gridGroup)this.gridGroup.children.forEach(c=>{if(c.material){c.material.opacity=dark?0.06:0.18;c.material.color.setHex(dark?0x5B8A8A:0x4A7272);}});
+    this.equationSprites.forEach(s=>{s.material.opacity=dark?0.4:0.2;});
+    this.ambientLight.intensity=dark?0.6:1.2;
+    this.renderer.toneMappingExposure=dark?0.8:1.4;
+  }
+
+  _animate() {
+    const clock=new THREE.Clock();
+    const loop=()=>{
+      requestAnimationFrame(loop);
+      const dt=Math.min(clock.getDelta(),0.05), t=clock.getElapsedTime();
+      if(!this.trans.active){
+        this.camera.position.x+=(this.mouseX*3-this.camera.position.x)*0.015;
+        this.camera.position.y+=(22+this.mouseY*-2-this.camera.position.y)*0.015;
+        this.camera.position.z+=(90-this.camera.position.z)*0.02;
+        this.camera.lookAt(this.mouseX*1.5, 18, 0);
+      }
+      if(this.ambientParticles){
+        const p=this.ambientParticles.geometry.attributes.position;
+        for(let i=0;i<p.count;i++){p.array[i*3+1]+=Math.sin(t+i)*0.01;p.array[i*3]+=Math.cos(t*0.5+i*0.1)*0.005;}
+        p.needsUpdate=true; this.ambientParticles.rotation.y=t*0.01;
+      }
+      this.equationSprites.forEach(s=>{s.position.y=s.userData.baseY+Math.sin(t*0.3+s.userData.phase)*3;});
+      if(this.trackGroup){
+        this.trackGroup.traverse(c=>{
+          if(c.geometry?.type==='SphereGeometry')c.scale.setScalar(1+Math.sin(t*2+c.id)*0.2);
+        });
+      }
+      this.lights[0].position.x=-30+Math.sin(t*0.3)*15;
+      this.lights[1].position.z=-20+Math.cos(t*0.2)*15;
+      this.lights[2].intensity=1+Math.sin(t*0.5)*0.3;
+      if(this.gridGroup)this.gridGroup.position.y=-2+Math.sin(t*0.2)*0.3;
+      this._runTransition(dt,t);
+      this.renderer.render(this.scene,this.camera);
+    };
+    loop();
+  }
+}
+
+
+/**
+ * Chapter Controller v2 - Uses the 5-step rollercoaster transition
+ * Ride -> Reveal -> Zoom -> Flash -> Emerge
+ */
+class ChapterController {
+  constructor(engine, gsap) {
+    this.engine = engine;
+    this.gsap = gsap;
+    this.current = 0;
+    this.total = 5;
+    this.busy = false;
+    this.chapters = document.querySelectorAll('.chapter-page');
+    this.dots = document.querySelectorAll('.nav-dot');
+    this.overlay = document.getElementById('transition-overlay');
+    this.flash = document.getElementById('flash-frame');
+    this.progress = document.getElementById('chapter-progress');
+
+    this._setupDots();
+    this._setupMobileNav();
+    this._setupWheel();
+    this._setupKeys();
+    this._setupTouch();
+    this._show(0, false);
+  }
+
+  _setupMobileNav() {
+    this.mobBtns = document.querySelectorAll('.mob-nav-btn');
+    this.mobBtns.forEach((b, i) => b.addEventListener('click', () => this.goTo(i)));
+  }
+
+  _setupDots() {
+    this.dots.forEach((d, i) => d.addEventListener('click', () => this.goTo(i)));
+  }
+
+  _setupWheel() {
+    let acc = 0, timer = null;
+    addEventListener('wheel', e => {
+      if (this.busy) return;
+      const page = this.chapters[this.current];
+      const inner = page?.querySelector('.chapter-inner');
+      if (inner) {
+        const atTop = inner.scrollTop <= 0;
+        const atBot = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 5;
+        if (e.deltaY > 0 && !atBot) { inner.scrollTop += e.deltaY; return; }
+        if (e.deltaY < 0 && !atTop) { inner.scrollTop += e.deltaY; return; }
+      }
+      e.preventDefault();
+      acc += e.deltaY;
+      clearTimeout(timer);
+      timer = setTimeout(() => { acc = 0; }, 200);
+      if (Math.abs(acc) > 80) {
+        if (acc > 0 && this.current < this.total - 1) this.goTo(this.current + 1);
+        else if (acc < 0 && this.current > 0) this.goTo(this.current - 1);
+        acc = 0;
+      }
+    }, { passive: false });
+  }
+
+  _setupKeys() {
+    addEventListener('keydown', e => {
+      if (this.busy) return;
+      if ((e.key === 'ArrowDown' || e.key === 'PageDown') && this.current < this.total-1) { e.preventDefault(); this.goTo(this.current+1); }
+      else if ((e.key === 'ArrowUp' || e.key === 'PageUp') && this.current > 0) { e.preventDefault(); this.goTo(this.current-1); }
+      else if (e.key >= '1' && e.key <= '5') this.goTo(+e.key - 1);
+    });
+  }
+
+  _setupTouch() {
+    let sy = 0;
+    addEventListener('touchstart', e => { sy = e.touches[0].clientY; });
+    addEventListener('touchend', e => {
+      if (this.busy) return;
+      const d = sy - e.changedTouches[0].clientY;
+      if (Math.abs(d) > 60) {
+        if (d > 0 && this.current < this.total-1) this.goTo(this.current+1);
+        else if (d < 0 && this.current > 0) this.goTo(this.current-1);
+      }
+    });
+  }
+
+  goTo(idx) {
+    if (idx === this.current || this.busy || idx < 0 || idx >= this.total) return;
+    this.busy = true;
+    const prev = this.current;
+    this.current = idx;
+
+    // Update progress + dots
+    if (this.progress) this.progress.style.width = ((idx+1)/this.total*100) + '%';
+    this.dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+    if (this.mobBtns) this.mobBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
+
+    // Hide scroll prompt
+    const prompt = document.getElementById('scroll-prompt');
+    if (prompt) { this.gsap.to(prompt, { opacity: 0, duration: 0.2, onComplete: () => { prompt.style.display = 'none'; } }); }
+
+    // STEP 1-3: Fade out chapter content as ride begins
+    this.gsap.to(this.chapters[prev], {
+      opacity: 0, scale: 0.92, duration: 0.6, ease: 'power2.in',
+      onComplete: () => {
+        this.chapters[prev].classList.remove('active');
+        this.chapters[prev].style.pointerEvents = 'none';
+      }
+    });
+
+    // Start the rollercoaster transition in the 3D engine
+    this.engine.startTransition(idx,
+      // onFlash callback (Step 4)
+      () => {
+        if (this.flash) {
+          this.flash.style.opacity = '1';
+          setTimeout(() => { this.flash.style.opacity = '0'; }, 100);
+        }
+      },
+      // onComplete callback (Step 5 done)
+      () => {
+        this._show(idx, true);
+        this.busy = false;
+      }
+    );
+
+    // Update footer label
+    const labels = ['Getting to Know Me','Explore Work','Skills and Tools','Building with Curiosity','Enter Playground'];
+    const labelEl = document.getElementById('chapter-label');
+    if (labelEl) {
+      this.gsap.to(labelEl, { opacity: 0, duration: 0.2, onComplete: () => {
+        labelEl.textContent = labels[idx] || '';
+        this.gsap.to(labelEl, { opacity: 0.2, duration: 0.4 });
+      }});
+    }
+  }
+
+  _show(idx, animate = true) {
+    const page = this.chapters[idx];
+    if (!page) return;
+    page.classList.add('active');
+    page.style.pointerEvents = 'auto';
+    const inner = page.querySelector('.chapter-inner');
+    if (inner) inner.scrollTop = 0;
+
+    if (animate) {
+      this.gsap.fromTo(page,
+        { opacity: 0, scale: 0.9, y: 40 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'back.out(1.2)' }
+      );
+      const items = page.querySelectorAll('.reveal-item');
+      if (items.length) {
+        this.gsap.fromTo(items, { opacity: 0, y: 25 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power3.out', delay: 0.25 });
+      }
+    } else {
+      page.style.opacity = 1; page.style.transform = 'none';
+    }
+    this.dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+    if (this.mobBtns) this.mobBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
+  }
+}
+
+
+/**
+ * Cinematic Loader - Draws mathematical curves as loading animation
+ */
+function initLoader(gsap, onComplete) {
+  const canvas = document.getElementById('loader-canvas');
+  const eqEl = document.querySelector('.loader-equation');
+  const statusEl = document.querySelector('.loader-status');
+  if (!canvas) { onComplete(); return; }
+
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(devicePixelRatio, 2);
+  canvas.width = 300 * dpr; canvas.height = 150 * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const equations = [
+    'f(x) = (1/s sqrt 2 pi) e^(-(x-mu)^2/2s^2)',
+    'P(A|B) = P(B|A) * P(A) / P(B)',
+    'gradient f(x) = lim h->0 [f(x+h) - f(x)] / h',
+    'R^2 = 1 - SS_res / SS_tot',
+  ];
+
+  let progress = 0;
+  let currentEq = 0;
+
+  // Animate equation text
+  gsap.to(eqEl, { opacity: 1, duration: 0.5, delay: 0.3 });
+  gsap.to(statusEl, { opacity: 1, duration: 0.5, delay: 0.5 });
+
+  const eqInterval = setInterval(() => {
+    currentEq = (currentEq + 1) % equations.length;
+    gsap.to(eqEl, {
+      opacity: 0, duration: 0.2,
+      onComplete: () => {
+        eqEl.textContent = equations[currentEq];
+        gsap.to(eqEl, { opacity: 1, duration: 0.3 });
+      }
+    });
+  }, 800);
+
+  function drawCurve() {
+    ctx.clearRect(0, 0, 300, 150);
+
+    // Graph paper grid
+    ctx.strokeStyle = 'rgba(91,138,138,0.08)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < 300; x += 15) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 150); ctx.stroke();
+    }
+    for (let y = 0; y < 150; y += 15) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(300, y); ctx.stroke();
+    }
+
+    // Draw normal distribution curve progressively
+    const maxX = progress * 300;
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(91,138,138,0.8)';
+    ctx.lineWidth = 2;
+    ctx.shadowColor = 'rgba(91,138,138,0.4)';
+    ctx.shadowBlur = 8;
+
+    for (let x = 0; x <= maxX; x++) {
+      const t = x / 300;
+      const bell = Math.exp(-0.5 * Math.pow((t - 0.5) / 0.15, 2));
+      const y = 130 - bell * 100;
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Secondary curve
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(200,113,61,0.4)';
+    ctx.lineWidth = 1.5;
+    for (let x = 0; x <= maxX; x++) {
+      const t = x / 300;
+      const y = 130 - 50 * Math.sin(t * Math.PI * 2.5) * t;
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Data points
+    if (progress > 0.2) {
+      const pts = [0.2, 0.35, 0.5, 0.65, 0.8].filter(p => p <= progress);
+      pts.forEach(p => {
+        const px = p * 300;
+        const bell = Math.exp(-0.5 * Math.pow((p - 0.5) / 0.15, 2));
+        const py = 130 - bell * 100;
+        ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200,113,61,0.9)'; ctx.fill();
+      });
+    }
+
+    // Progress text
+    ctx.font = '10px JetBrains Mono';
+    ctx.fillStyle = 'rgba(250,246,240,0.3)';
+    ctx.fillText(Math.floor(progress * 100) + '%', 270, 145);
+
+    progress += 0.008;
+    statusEl.textContent = progress < 0.3 ? 'loading assets...' :
+      progress < 0.6 ? 'building curves...' :
+      progress < 0.9 ? 'initializing universe...' : 'ready';
+
+    if (progress < 1) {
+      requestAnimationFrame(drawCurve);
+    } else {
+      clearInterval(eqInterval);
+      setTimeout(() => {
+        const loader = document.getElementById('cinematic-loader');
+        gsap.to(loader, {
+          opacity: 0, duration: 1, ease: 'power2.out',
+          onComplete: () => {
+            loader.classList.add('hidden');
+            onComplete();
+          }
+        });
+      }, 400);
+    }
+  }
+
+  eqEl.textContent = equations[0];
+  requestAnimationFrame(drawCurve);
+}
+
+/**
+ * Custom Cursor with trail
+ */
+function initCursor() {
+  const cursor = document.getElementById('custom-cursor');
+  const dot = document.getElementById('cursor-dot');
+  if (!cursor || !dot || window.innerWidth < 769) return;
+
+  let cx = -100, cy = -100, dx = -100, dy = -100;
+
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
+  });
+
+  function anim() {
+    dx += (cx - dx) * 0.12; dy += (cy - dy) * 0.12;
+    cursor.style.left = dx + 'px'; cursor.style.top = dy + 'px';
+    requestAnimationFrame(anim);
+  }
+  anim();
+
+  const hoverables = 'a, button, .nav-dot, .proj-card, .cur-card, .bp-card, .stat-card';
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(hoverables)) cursor.classList.add('hovering');
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(hoverables)) cursor.classList.remove('hovering');
+  });
+}
+
+
+/**
+ * Skills Constellation - Interactive node graph for the Skills chapter
+ */
+function initSkillsConstellation(canvas) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr, mouse = { x: -999, y: -999 }, hovered = null;
+
+  // Domain definitions with colours
+  const DOMAINS = {
+    stats:    { label: 'Statistics & Math',  color: '#5B8A8A' },
+    ml:       { label: 'ML & AI',            color: '#C9A96E' },
+    embedded: { label: 'Embedded & Robotics', color: '#C8713D' },
+    data:     { label: 'Data & Visualisation',color: '#4A4E7A' },
+    other:    { label: 'Research & Teaching', color: '#7AABAB' },
+  };
+
+  const skills = [
+    // Stats & Math cluster (top-left)
+    { id: 'stats',    label: 'Statistics',      domain: 'stats',    note: 'making sense of chaos',          proficiency: 'Advanced',   px: .16, py: .28 },
+    { id: 'econom',   label: 'Econometrics',     domain: 'stats',    note: 'WLS, regression, PLFS datasets',  proficiency: 'Advanced',   px: .10, py: .48 },
+    { id: 'r',        label: 'R',               domain: 'stats',    note: 'statistical computing',           proficiency: 'Intermediate',px: .10, py: .68 },
+
+    // ML & AI cluster (top-centre)
+    { id: 'ml',       label: 'Machine Learning', domain: 'ml',       note: 'patterns in everything',          proficiency: 'Advanced',   px: .38, py: .16 },
+    { id: 'ai',       label: 'AI',              domain: 'ml',       note: 'teaching machines to think',      proficiency: 'Advanced',   px: .54, py: .10 },
+    { id: 'cv',       label: 'Computer Vision',  domain: 'ml',       note: 'eyes for machines',               proficiency: 'Intermediate',px: .60, py: .30 },
+    { id: 'nlp',      label: 'NLP',             domain: 'ml',       note: 'understanding language',          proficiency: 'Intermediate',px: .46, py: .56 },
+    { id: 'python',   label: 'Python',           domain: 'ml',       note: 'the Swiss army knife',            proficiency: 'Advanced',   px: .32, py: .40 },
+
+    // Embedded & Robotics cluster (right)
+    { id: 'robotics', label: 'Robotics',         domain: 'embedded', note: 'giving machines a body',         proficiency: 'Intermediate',px: .76, py: .20 },
+    { id: 'arduino',  label: 'Arduino / ESP32',  domain: 'embedded', note: 'hardware meets code',            proficiency: 'Advanced',   px: .84, py: .42 },
+    { id: 'iot',      label: 'IoT',              domain: 'embedded', note: 'real-time sensor systems',       proficiency: 'Intermediate',px: .80, py: .62 },
+
+    // Data & Viz cluster (bottom-left)
+    { id: 'analytics',label: 'Data Analytics',   domain: 'data',     note: 'stories in data',                proficiency: 'Advanced',   px: .22, py: .66 },
+    { id: 'sql',      label: 'SQL',              domain: 'data',     note: 'querying the world',             proficiency: 'Intermediate',px: .14, py: .84 },
+    { id: 'dataviz',  label: 'Data Viz',         domain: 'data',     note: 'beauty in numbers',              proficiency: 'Advanced',   px: .34, py: .82 },
+
+    // Research & Teaching cluster (bottom-right)
+    { id: 'research', label: 'Research',         domain: 'other',    note: 'asking better questions',        proficiency: 'Advanced',   px: .66, py: .72 },
+    { id: 'teaching', label: 'Teaching',         domain: 'other',    note: 'learning by sharing',            proficiency: 'Advanced',   px: .82, py: .84 },
+    { id: 'curriculum',label: 'Curriculum Design',domain:'other',    note: 'K-10 AI syllabus design',        proficiency: 'Advanced',   px: .54, py: .86 },
+  ];
+
+  const connections = [
+    ['stats','econom'],['stats','ml'],['stats','analytics'],['stats','r'],['stats','research'],
+    ['ml','ai'],['ml','python'],['ml','cv'],['ml','nlp'],
+    ['ai','robotics'],['ai','cv'],['ai','nlp'],
+    ['robotics','arduino'],['robotics','iot'],['robotics','teaching'],
+    ['analytics','sql'],['analytics','python'],['analytics','dataviz'],
+    ['python','cv'],['python','nlp'],['python','analytics'],
+    ['research','teaching'],['research','stats'],['research','curriculum'],
+    ['teaching','curriculum'],['cv','iot'],['dataviz','analytics'],
+  ];
+
+  function resize() {
+    dpr = Math.min(devicePixelRatio, 2);
+    W = canvas.offsetWidth; H = canvas.offsetHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function pos(n, t) {
+    return { x: n.px * W, y: n.py * H + Math.sin(t * 0.5 + n.px * 10) * 3 };
+  }
+
+  function nodeAt(mx, my, t) {
+    for (let n of skills) {
+      const p = pos(n, t);
+      if ((mx - p.x) ** 2 + (my - p.y) ** 2 < 900) return n;
+    }
+    return null;
+  }
+
+  // Detect light mode
+  function isLightMode() { return document.body.classList.contains('light-mode'); }
+
+  function hexToRgba(hex, a) {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  function draw(ts) {
+    ctx.clearRect(0, 0, W, H);
+    const t = ts * 0.001;
+    const light = isLightMode();
+    const baseText = light ? '45,45,45' : '250,246,240';
+    const domainKeys = Object.keys(DOMAINS);
+
+    // Draw domain legend at bottom
+    const legendY = H - 14;
+    let legendX = 10;
+    domainKeys.forEach(dk => {
+      const d = DOMAINS[dk];
+      ctx.beginPath(); ctx.arc(legendX + 6, legendY, 5, 0, Math.PI*2);
+      ctx.fillStyle = hexToRgba(d.color, 0.75); ctx.fill();
+      ctx.font = '500 9px DM Sans'; ctx.fillStyle = `rgba(${baseText},0.4)`;
+      ctx.textAlign = 'left'; ctx.fillText(d.label, legendX + 14, legendY + 3.5);
+      legendX += ctx.measureText(d.label).width + 28;
+    });
+
+    connections.forEach(([a, b]) => {
+      const na = skills.find(s => s.id === a), nb = skills.find(s => s.id === b);
+      const pa = pos(na, t), pb = pos(nb, t);
+      const isH = hovered && (hovered.id === a || hovered.id === b);
+      ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
+      ctx.strokeStyle = isH
+        ? hexToRgba(DOMAINS[hovered.domain]?.color || '#C9A96E', 0.55)
+        : light ? `rgba(${baseText},0.07)` : 'rgba(250,246,240,0.07)';
+      ctx.lineWidth = isH ? 1.8 : 0.6; ctx.stroke();
+    });
+
+    skills.forEach(node => {
+      const p = pos(node, t);
+      const domColor = DOMAINS[node.domain]?.color || '#5B8A8A';
+      const isH = hovered && hovered.id === node.id;
+      const isC = hovered && connections.some(([a, b]) =>
+        (a === hovered.id && b === node.id) || (b === hovered.id && a === node.id));
+      const tw = Math.sin(t * 3 + node.px * 20) * 0.3 + 0.7;
+      const r = (isH ? 18 : isC ? 14 : 9) * tw;
+
+      // Glow halo on hover
+      if (isH) {
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 38);
+        grad.addColorStop(0, hexToRgba(domColor, 0.28)); grad.addColorStop(1, hexToRgba(domColor, 0));
+        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(p.x, p.y, 38, 0, Math.PI * 2); ctx.fill();
+      }
+
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = isH
+        ? hexToRgba(domColor, 0.95)
+        : isC
+          ? hexToRgba(domColor, 0.6)
+          : hexToRgba(domColor, light ? 0.35 : 0.22 * tw);
+      ctx.fill();
+
+      // Node label
+      ctx.font = isH ? '600 12px DM Sans' : '500 9.5px DM Sans';
+      ctx.fillStyle = light
+        ? `rgba(${baseText},${isH ? 1 : isC ? 0.8 : 0.6})`
+        : `rgba(${baseText},${isH ? 1 : isC ? 0.85 : 0.5})`;
+      ctx.textAlign = 'center'; ctx.fillText(node.label, p.x, p.y + r + 14);
+
+      // Tooltip card on hover
+      if (isH) {
+        const padding = 10, lineH = 16;
+        const lines = [
+          { text: node.note,        font: '500 11px Caveat',   color: hexToRgba(domColor, 0.9) },
+          { text: node.proficiency, font: '500 9px DM Sans',   color: light ? 'rgba(45,45,45,0.5)' : 'rgba(250,246,240,0.45)' },
+          { text: DOMAINS[node.domain]?.label, font: '500 9px DM Sans', color: light ? 'rgba(45,45,45,0.4)' : 'rgba(250,246,240,0.35)' },
+        ];
+        const maxW = Math.max(...lines.map(l => { ctx.font = l.font; return ctx.measureText(l.text).width; }));
+        const bw = maxW + padding * 2, bh = lines.length * lineH + padding * 1.5;
+        let bx = p.x - bw / 2, by = p.y - r - bh - 10;
+        if (bx < 4) bx = 4; if (bx + bw > W - 4) bx = W - bw - 4;
+        if (by < 4) by = p.y + r + 10;
+
+        ctx.fillStyle = light ? 'rgba(255,255,255,0.93)' : 'rgba(12,14,22,0.92)';
+        ctx.strokeStyle = hexToRgba(domColor, 0.35); ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 6) : ctx.rect(bx, by, bw, bh);
+        ctx.fill(); ctx.stroke();
+
+        lines.forEach((l, i) => {
+          ctx.font = l.font; ctx.fillStyle = l.color; ctx.textAlign = 'left';
+          ctx.fillText(l.text, bx + padding, by + padding + i * lineH + 10);
+        });
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
+    hovered = nodeAt(mouse.x, mouse.y, Date.now() * 0.001);
+    canvas.style.cursor = hovered ? 'pointer' : 'default';
+  });
+  canvas.addEventListener('mouseleave', () => { hovered = null; });
+
+  // Touch support for skills canvas
+  canvas.addEventListener('touchstart', e => {
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    mouse.x = touch.clientX - rect.left; mouse.y = touch.clientY - rect.top;
+    hovered = nodeAt(mouse.x, mouse.y, Date.now() * 0.001);
+  }, { passive: true });
+  canvas.addEventListener('touchend', () => { setTimeout(() => { hovered = null; }, 1800); }, { passive: true });
+
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(draw);
+}
+
+
+/**
+ * Projects - Fetches from GitHub and renders project cards
+ */
+function initProjects(gsap) {
+  const grid = document.getElementById('project-grid');
+  if (!grid) return;
+
+  const GITHUB_USER = 'Obedientononline';
+  const LANG_COLORS = {
+    Python: '#3572A5', 'C++': '#f34b7d', Java: '#b07219',
+    JavaScript: '#f1e05a', HTML: '#e34c26', CSS: '#563d7c',
+    Shell: '#89e051', null: '#6B6B6B'
+  };
+
+  // Skeleton loading
+  for (let i = 0; i < 6; i++) {
+    const sk = document.createElement('div');
+    sk.className = 'proj-card';
+    sk.style.opacity = '0.3';
+    sk.innerHTML = '<div class="proj-bar" style="background:#333;height:3px"></div><div class="proj-body"><div style="height:14px;background:#222;border-radius:4px;width:60%;margin-bottom:8px"></div><div style="height:10px;background:#1a1a1a;border-radius:4px;width:90%;margin-bottom:6px"></div><div style="height:10px;background:#1a1a1a;border-radius:4px;width:70%"></div></div>';
+    grid.appendChild(sk);
+  }
+
+  fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=pushed&per_page=30`)
+    .then(r => r.json())
+    .then(data => {
+      const repos = data
+        .filter(r => !r.fork || ['Natural-Language-Processing', 'Computer-Vision-Projects', 'AI-ML', 'AI-Games'].includes(r.name))
+        .filter(r => r.name !== 'Obedientononline' && r.name !== `${GITHUB_USER}.github.io`);
+
+      grid.innerHTML = '';
+      repos.forEach((repo, i) => {
+        const REPO_COLORS = {
+  'Computer-Vision-Projects': '#7AABAB',
+  'AI-ML': '#C9A96E',
+  'AI-Games': '#C8713D',
+  'Natural-Language-Processing': '#4A4E7A',
+   };
+        const color = REPO_COLORS[repo.name] || LANG_COLORS[repo.language] || '#5B8A8A';
+        const topics = repo.topics && repo.topics.length
+          ? repo.topics.slice(0, 4).map(t => `<span class="proj-tag">${t}</span>`).join('')
+          : (repo.language ? `<span class="proj-tag">${repo.language}</span>` : '');
+
+        const card = document.createElement('div');
+        card.className = 'proj-card reveal-item';
+        card.innerHTML = `
+          <div class="proj-bar" style="background:${color}"></div>
+          <div class="proj-body">
+            <h4 class="proj-title">${repo.name.replace(/[-_]/g, ' ')}</h4>
+            <p class="proj-desc">${repo.description || 'No description'}</p>
+            <div class="proj-tags">${topics}</div>
+            <div class="proj-footer">
+              <span>${repo.language || ''}</span>
+              <a href="${repo.html_url}" target="_blank" class="proj-link">Explore</a>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+
+        gsap.fromTo(card,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.6, delay: 0.1 + i * 0.06, ease: 'power3.out' }
+        );
+      });
+    })
+    .catch(() => {
+      grid.innerHTML = '<p style="text-align:center;color:rgba(250,246,240,0.4);grid-column:1/-1">Could not load projects. Visit <a href="https://github.com/Obedientononline" target="_blank" style="color:#5B8A8A">GitHub</a> directly.</p>';
+    });
+}
+
+
+
+
+    document.fonts.ready.then(() => {
+      initLoader(gsap, () => {
+        const canvas = document.getElementById('three-canvas');
+        const engine = new RollercoasterEngine(canvas);
+        const ctrl = new ChapterController(engine, gsap);
+
+        initCursor();
+        initProjects(gsap);
+        const skillsCanvas = document.getElementById('skills-canvas');
+        if (skillsCanvas) initSkillsConstellation(skillsCanvas);
+
+        // Stat counters
+        document.querySelectorAll('.stat-number').forEach(num => {
+          const target = parseInt(num.dataset.target);
+          gsap.to({ val: 0 }, {
+            val: target, duration: 2, delay: 0.3, ease: 'power2.out',
+            onUpdate() { num.textContent = Math.round(this.targets()[0].val) + (target >= 10 ? '+' : ''); }
+          });
+        });
+
+        // Logo scramble
+        const logo = document.getElementById('nav-logo');
+        if (logo) {
+          const orig = logo.textContent;
+          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%';
+          let iv;
+          logo.addEventListener('mouseenter', () => {
+            let it = 0; clearInterval(iv);
+            iv = setInterval(() => {
+              logo.textContent = orig.split('').map((c, i) => i < it ? orig[i] : chars[Math.floor(Math.random()*chars.length)]).join('');
+              if (it >= orig.length) clearInterval(iv);
+              it += 0.5;
+            }, 40);
+          });
+          logo.addEventListener('mouseleave', () => { clearInterval(iv); logo.textContent = orig; });
+        }
+
+        // 3D tilt on cards
+        document.querySelectorAll('.bp-card, .stat-card, .cur-card').forEach(card => {
+          card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            gsap.to(card, { rotateY: ((e.clientX-r.left)/r.width-0.5)*15, rotateX: -((e.clientY-r.top)/r.height-0.5)*15, scale: 1.04, duration: 0.3, ease: 'power2.out' });
+          });
+          card.addEventListener('mouseleave', () => gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.5, ease: 'elastic.out(1,0.5)' }));
+        });
+
+        // Notebook tilt
+        document.querySelectorAll('.notebook-page').forEach(page => {
+          page.addEventListener('mousemove', e => {
+            const r = page.getBoundingClientRect();
+            gsap.to(page, { rotateY: ((e.clientX-r.left)/r.width-0.5)*6, rotateX: -((e.clientY-r.top)/r.height-0.5)*4, duration: 0.3, ease: 'power2.out' });
+          });
+          page.addEventListener('mouseleave', () => gsap.to(page, { rotateY: 0, rotateX: 0, duration: 0.5, ease: 'elastic.out(1,0.6)' }));
+        });
+
+        // Theme toggle
+        const toggle = document.getElementById('theme-toggle');
+        const label = document.getElementById('theme-label');
+        let isDark = true;
+        if (toggle) {
+          toggle.addEventListener('click', () => {
+            isDark = !isDark;
+            toggle.classList.toggle('light', !isDark);
+            document.body.classList.toggle('light-mode', !isDark);
+            if (label) {
+              gsap.to(label, { opacity: 0, duration: 0.2, onComplete: () => {
+                label.textContent = isDark ? 'dark' : 'light';
+                gsap.to(label, { opacity: 1, duration: 0.3 });
+              }});
+            }
+            // Cinematic theme transition in 3D
+            engine.setTheme(isDark);
+          });
+        }
+      });
+    });
+  
+</script>
+</body>
+</html>
+
