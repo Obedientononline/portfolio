@@ -1847,7 +1847,7 @@ function initProjects(gsap) {
     .then(data => {
       const repos = data
         .filter(r => !r.fork || ['Natural-Language-Processing', 'Computer-Vision-Projects', 'AI-ML', 'AI-Games'].includes(r.name))
-        .filter(r => r.name !== 'Obedientononline' && r.name !== `${GITHUB_USER}.github.io`);
+        .filter(r => r.name !== 'Obedientononline' && r.name !== `${GITHUB_USER}.github.io` && r.name !== 'portfolio');
 
       grid.innerHTML = '';
       repos.forEach((repo, i) => {
