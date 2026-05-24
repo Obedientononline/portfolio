@@ -36,11 +36,6 @@ Built entirely as a single HTML file with no build tools or frameworks.
 5. **Enter Playground** - Curiosity cards on a Neural Pathway
 
 ---
-
-## Hosting
-
-See [hosting steps](#hosting-steps) below.
-
 ---
 
 
