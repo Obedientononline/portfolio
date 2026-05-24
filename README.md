@@ -41,4 +41,4 @@ Built entirely as a single HTML file with no build tools or frameworks.
 
 ## License
 
-© 2026 Shivani R. Made with curiosity.
+© 2026 Shivani R.
